@@ -1,0 +1,16 @@
+.result {
+    display: flex;
+    align-items: center;
+    max-width: 500px;
+    margin: 0.5em auto;
+    background: rgba(26, 26, 26, 0.01);
+    min-height: 100px;
+
+    .poster {
+        flex: 0 auto;
+    }
+
+    .title {
+        flex: 1 auto;
+    }
+}
