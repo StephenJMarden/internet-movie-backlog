@@ -1,0 +1,17 @@
+.movie-page {
+    max-width: 500px;
+    margin: 0 auto;
+
+    p, .more-info {
+        text-align: left;
+        padding: 1em;
+    }
+
+    .basic-info {
+        font-size: 0.8em;
+    }
+
+    strong {
+        padding-right: 0.5em;
+    }
+}

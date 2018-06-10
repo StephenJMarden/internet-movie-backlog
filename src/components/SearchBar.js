@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class SearchBar extends Component {
     constructor(props) {
@@ -12,19 +13,23 @@ class SearchBar extends Component {
         this.setState({query: event.target.value});
     }
 
-    handleSubmit(event) {
-        event.preventDefault();
-        this.props.onSearch(this.state.query);
+    createUrlQuery(query) {
+        return query.split(" ").join("+");
+    }
+
+    handleSearchClick() {
+        this.setState({query: ""});
     }
 
     render() {
+        const query = this.createUrlQuery(this.state.query);
+
         return (
-            <form onSubmit={(e) => this.handleSubmit(e)}>
-                <div className="ui icon input">
+            <form>
+                <div className="ui input">
                     <input type="text" value={this.state.query} onChange={(e) => this.handleChange(e)} placeholder="Search..." />
-                    <i className="search icon"></i>
                 </div>
-                <button type="submit" className="ui button blue">Search</button>
+                <Link onClick={() => this.handleSearchClick()} to={`/search/${query}`} ><button type="submit" className="ui icon button primary"><i className="icon search"></i></button></Link>
             </form>
         )
     }

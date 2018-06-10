@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import CONFIG from '../config.js';
 import "./css/SearchResults.min.css";
 
@@ -7,7 +8,7 @@ class SearchResults extends Component {
         super(props);
         this.state = {
             results: [],
-            query: this.props.query,
+            query: this.props.match.params.query,
             searchError: false,
             totalPages: 1,
             page: 1
@@ -15,15 +16,9 @@ class SearchResults extends Component {
     }
 
     componentDidMount() {
+        this.setState({query: this.props.match.params.query});
         if(this.props.query !== "") {
-            this.getResults(this.props.query);
-        }
-    }
-
-    componentDidUpdate() {
-        if(this.props.query !== "" && this.props.query !== this.state.query) {
-            this.getResults(this.props.query);
-            this.setState({query: this.props.query});
+            this.getResults(this.state.query);
         }
     }
 
@@ -51,11 +46,12 @@ class SearchResults extends Component {
                 <div>
                     {
                         this.state.results.map((result, index) => {
+                            const link = `/movie/${result.imdbID}`;
                             return (
-                                <div className="result" key={index}>
+                                <Link to={link} className="result" key={index}>
                                     <img className="ui tiny image poster" src={result.Poster} alt=""/>
                                     <div className="title">{`${result.Title} (${result.Year})`}</div>
-                                </div>
+                                </Link>
                             )
                         })
                     }

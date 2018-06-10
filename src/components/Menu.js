@@ -10,14 +10,10 @@ class Menu extends Component {
         };
     }
 
-    handleLinkClick() {
-        this.props.getQuery("");
-    }
-
     render() {
         return (
             <header className="ui menu">
-                <Link className="header item" to="/" onClick={() => this.handleLinkClick()}>IMBL</Link>
+                <Link className="header item" to="/">IMBL</Link>
                 <div className="right menu">
                     <SearchBar onSearch={(query) => this.props.onSearch(query)} />
                 </div>
