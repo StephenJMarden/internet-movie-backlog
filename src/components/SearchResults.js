@@ -8,7 +8,6 @@ class SearchResults extends Component {
         super(props);
         this.state = {
             results: [],
-            query: this.props.match.params.query,
             searchError: false,
             totalPages: 1,
             page: 1
@@ -16,9 +15,15 @@ class SearchResults extends Component {
     }
 
     componentDidMount() {
-        this.setState({query: this.props.match.params.query});
+        console.log(this.props.query);
         if(this.props.query !== "") {
-            this.getResults(this.state.query);
+            this.getResults(this.props.query);
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if(this.props.query !== prevProps.query && this.props.query !== "") {
+            this.getResults(this.props.query);
         }
     }
 
@@ -27,6 +32,7 @@ class SearchResults extends Component {
             .then(response => response.json())
             .then(data => {
                 this.setState({results: data.Search, totalPages: data.totalResults, searchError: false});
+                console.log(data);
             })
             .catch(error => {
                 console.error("Error:", error);
@@ -34,27 +40,47 @@ class SearchResults extends Component {
             });
     }
 
+    closeResults() {
+        this.setState({results: []});
+        this.props.clearQuery();
+    }
+
     render() {
+
         if(this.state.searchError) {
-            return <div className="ui header">There was an error with your search...</div>
-        } else if(this.state.query === "") {
-            return <div className="ui header">Use the searchbar to find a movie</div>
+            return (
+                <div className="ui list">
+                    <div className="item">There was an error with your search...</div>
+                </div>
+            )
+        }else if(this.props.query === "" || this.state.results.length === 0) {
+            return (
+                <div></div>
+            )
         }else if(this.state.results === undefined) {
-            return <div className="ui header">Your search did not return any results. Try another query.</div>
+            return (
+                <div className="ui list">
+                    <div className="item">Your search did not return any results. Try another query.</div>
+                </div>
+            )
         } else {
             return (
-                <div>
-                    {
-                        this.state.results.map((result, index) => {
-                            const link = `/movie/${result.imdbID}`;
-                            return (
-                                <Link to={link} className="result" key={index}>
-                                    <img className="ui tiny image poster" src={result.Poster} alt=""/>
-                                    <div className="title">{`${result.Title} (${result.Year})`}</div>
-                                </Link>
-                            )
-                        })
-                    }
+                <div className="custom-results">
+                    <div className="ui middle aligned selection list">
+                        {
+                            this.state.results.map((result, index) => {
+                                const link = `/movie/${result.imdbID}`;
+                                return (
+                                    <Link onClick={() => this.closeResults()} to={link} className="item" key={index}>
+                                        <img className="ui mini image" src={result.Poster} alt=""/>
+                                        <div className="content">
+                                            <div className="header">{`${result.Title} (${result.Year})`}</div>
+                                        </div>
+                                    </Link>
+                                )
+                            })
+                        }
+                    </div>
                 </div>
             )
         }
